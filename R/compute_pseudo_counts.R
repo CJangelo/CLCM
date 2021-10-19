@@ -49,7 +49,10 @@
             for(cc in categories.j_j ){
 
               Xjc <- 1*(X[ , j, drop = F] == cc)
-              c.l[ , cc + 1] <- t(Xjc) %*% post.reduced
+              # c.l[ , cc + 1] <- t(Xjc) %*% post.reduced
+              # modified 10.19.21 to deal with missing data:
+              Xjc <- matrix(Xjc, nrow = nrow(Xjc), ncol = ncol(post.reduced), byrow = F)
+              c.l[, cc + 1] <- colSums(Xjc * post.reduced, na.rm = T)
 
             }# end loop over categories
 

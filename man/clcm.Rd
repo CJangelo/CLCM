@@ -13,6 +13,7 @@ clcm(
   lat.reg = NULL,
   sv = NULL,
   post.true = NULL,
+  initial.lprior = NULL,
   initial.post = NULL,
   max.diff = 1e-04,
   max.it = 1000,
@@ -93,6 +94,9 @@ the discrete timepoints. Note that the \code{dat} dataframe passed must contain 
 variable \code{Time}.}
 
 \item{sv}{optional list of the starting values for item parameter estimation}
+
+\item{initial.lprior}{optional matrix of the initial log-prior distribution. This
+is important for the 2-stage estimation routine.}
 
 \item{initial.post}{optional matrix of the initial posterior distribution}
 

@@ -63,8 +63,8 @@ for(j in 1:J){
 #
   if(item.type[j] == 'ZINB'){
 
-    size = var(X[,j])/(mean(X[,j]) + mean(X[,j])^2)
-    prob = size/(size + mean(X[,j]))
+    size = var(X[,j])/(mean(X[,j], na.rm = T) + mean(X[,j], na.rm = T)^2)
+    prob = size/(size + mean(X[,j], na.rm = T))
     zi = log(mean(X[ ,j] == 0, na.rm = T))
     param[[j]] <- c(2, prob, size, zi)
     names(param[[j]]) <- c('slope', 'intercept', 'size', 'zi')
@@ -76,7 +76,9 @@ for(j in 1:J){
  #
   if(item.type[j] == 'ZIP'){
 
-    param[[j]] <- c(2, -1*log(mean(X[ ,j][which(X[,j] != 0)])), log(mean(X[ ,j] == 0, na.rm = T)))
+    param[[j]] <- c(2,
+                    -1*log(mean(X[ ,j][which(X[,j] != 0)], na.rm = T)),
+                    log(mean(X[ ,j] == 0, na.rm = T)))
     names(param[[j]]) <- c('slope', 'intercept', 'zi')
 
   }#end ZIP
@@ -95,8 +97,9 @@ for(j in 1:J){
  #
   if(item.type[j] == 'Neg_Binom'){
 
-    size = var(X[,j])/(mean(X[,j]) + mean(X[,j])^2)
-    prob = size/(size + mean(X[,j]))
+    size = var(X[,j], na.rm = T)/
+      (mean(X[,j], na.rm = T) + mean(X[,j], na.rm = T)^2)
+    prob = size/(size + mean(X[,j], na.rm = T))
     param[[j]] <- c(1, prob, size)
     names(param[[j]]) <- c('slope', 'intercept', 'size')
 

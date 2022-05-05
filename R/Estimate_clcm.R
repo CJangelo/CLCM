@@ -76,6 +76,8 @@
 #' variable `Time`.
 #'
 #' @param sv optional list of the starting values for item parameter estimation
+#' @param initial.lprior optional matrix of the initial log-prior distribution. This
+#' is important for the 2-stage estimation routine.
 #' @param initial.post optional matrix of the initial posterior distribution
 #' @param max.diff convergence tolerance of item param estimation; default is 1e-04
 #' @param max.it maximum number of iterations in EM estimation procedure; default is 1e3
@@ -108,21 +110,22 @@ clcm <- function(dat,
                  lat.reg = NULL,
                  sv = NULL,
                  post.true = NULL,
+                 initial.lprior = NULL,
                  initial.post = NULL,
                  max.diff = 1e-4,
                  max.it = 1e3,
                  verbose =T ){
 
 
-# Check Data - Throw Errors, set defaults
+  # Check Data - Throw Errors, set defaults
   if(!is.data.frame(dat)){ stop('Pass a dataframe containing item responses')}
   if(is.null(item.type)){ stop('Must specify item type; pass character vector')}
   if(is.null(item.names)){ stop('Must specify item names; pass character vector')}
   if(is.null(dat$Time)){ print('No time variable - assuming a single timepoint');
-                          dat$Time <- 'Time_1' }
+    dat$Time <- 'Time_1' }
   if(length(unique(dat$Time)) > 2){ stop('Estimation function currently only supports up to 2 timepoints; please check your "Time" variable to confirm you only have two timepoints')}
   if(is.null(Q)){  print('No Q-matrix passed to estimation function; default is two latent classes');
-                      Q <- matrix(1, nrow = length(item.type), ncol = 1, dimnames = list(paste0('Item_', 1:length(item.type)), NULL))
+    Q <- matrix(1, nrow = length(item.type), ncol = 1, dimnames = list(paste0('Item_', 1:length(item.type)), NULL))
   }
 
   # Set default values:
@@ -132,11 +135,11 @@ clcm <- function(dat,
   #  Requires Q-matrix - create alpha and eta from Q-matrix
   # TODO extend eta to other types of condensation rules - currently only conjunctive
   # All condensation rules are equivalent for single attribute items
-     K <- ncol(Q)
-     alpha <- pattern(K)
-     eta <- alpha %*% t(Q)
-     eta <- ifelse(eta == matrix(1,2^K,1) %*% colSums(t(Q)),1, 0 )
-     # pass eta to all functions
+  K <- ncol(Q)
+  alpha <- pattern(K)
+  eta <- alpha %*% t(Q)
+  eta <- ifelse(eta == matrix(1,2^K,1) %*% colSums(t(Q)),1, 0 )
+  # pass eta to all functions
 
   if(is.null(lc.con)){  lc.con <- list('Time_1' = rep(1, 2^K), 'Time_2' = rep(1, 2^K) )  }
   if(is.null(lat.reg)){  lat.reg <- list('Time_1' = NULL, 'Time_2' = NULL)  }
@@ -147,144 +150,161 @@ clcm <- function(dat,
   if(!is.null(sv)){  param <- sv } else {  param <- ip[['param']]   }
 
 
-# Initialize Priors - full data frame dat
+  # Initialize Priors - full data frame dat
   tmp <- matrix(NA, nrow = nrow(dat), ncol = 2^K)
   lprior.names <- paste0('lprior_LC_', apply(alpha, 1, paste0, collapse = '')) # 3.6.21, fixed
   colnames(tmp) <- lprior.names
   dat <- cbind.data.frame(dat, tmp)  # added columns for the prior here
 
 
-  for(tt in unique(dat$Time) ){ # loop over timepoints
+  if (!is.null(initial.lprior)) {  # pass initial lprior for 2-stage estimation
 
-    lprior <- rep(1, 2^K)
-    lprior[is.na( lc.con[[ tt ]] ) ] <- 0
-    lprior <- lprior/sum(lprior)
-    lprior <- log(lprior)
+    # This allows you to pass a matrix/dataframe containing the log-priors
+    # for each timepoint. In the 2-stage estimation, it's just one timepoint.
+    for(tt in unique(dat$Time) ){ # loop over timepoints
+      lprior <- initial.lprior
+      ii <- which(dat[ , 'Time'] == tt)
+      dat[ ii , lprior.names ] <- lprior[ ii, ]
+    }
+  }
 
-    ii <- which(dat[ , 'Time'] == tt)
-    lprior <- matrix(lprior, nrow = length(ii) , ncol = length(lprior), byrow = T)
-    dat[ ii , lprior.names ] <- lprior
+
+  if (is.null(initial.lprior)) {
+
+    for(tt in unique(dat$Time) ){ # loop over timepoints
+
+      lprior <- rep(1, 2^K)
+      lprior[is.na( lc.con[[ tt ]] ) ] <- 0
+      lprior <- lprior/sum(lprior)
+      lprior <- log(lprior)
+
+      ii <- which(dat[ , 'Time'] == tt)
+      lprior <- matrix(lprior, nrow = length(ii) , ncol = length(lprior), byrow = T)
+      dat[ ii , lprior.names ] <- lprior
 
     }
+  }
 
 
-# Initialize Posterior Distribution - full data frame dat
+
+  # Initialize Posterior Distribution - full data frame dat
   tmp <- matrix(NA, nrow = nrow(dat), ncol = 2^K)
   post.names <- paste0('post_LC_', apply(alpha, 1, paste0, collapse = '')) # 3.6.21, fixed
   colnames(tmp) <- post.names
   dat <- cbind.data.frame(dat, tmp)  # added columns for the prior here
 
-# Initialize Posterior Distribution:
+  # Initialize Posterior Distribution:
   post.full <- compute_post(X = dat[ , item.names],
-                               lprior = dat[ , lprior.names], # Need labels from lprior initialization
-                               item.type = item.type,
-                               param = param,
-                               eta= eta,
-                               categories.j = categories.j)
+                            lprior = dat[ , lprior.names], # Need labels from lprior initialization
+                            item.type = item.type,
+                            param = param,
+                            eta= eta,
+                            categories.j = categories.j)
 
   dat[ , post.names] <- post.full
 
   if(!is.null(initial.post)){ dat[ , post.names] <- initial.post }
 
-####################################################################################################
-#
-#
-#             START ESTIMATION
-#
-#
-######################################################################################################3
+  ####################################################################################################
+  #
+  #
+  #             START ESTIMATION
+  #
+  #
+  ######################################################################################################3
 
 
   diff = 1
   it = 0
 
-#Start estimation:
-while(diff > max.diff & it < max.it){ #
+  #Start estimation:
+  while(diff > max.diff & it < max.it){ #
 
-  est0 <- param # use this to check item convergence later
+    est0 <- param # use this to check item convergence later
 
- # Loop over J Items:
- for(j in 1:length(item.type) ){
-
-
-  #E step:
-  item.type_j <- item.type[[j]]
-  categories.j_j <- categories.j[[j]]
-
-  # Pass "post.names" and "item.names"
-  ev = pseudo_counts(post = dat[ , post.names], X = dat[ , item.names],
-                          j = j,  categories.j = categories.j_j,
-                          eta = eta, item.type_j = item.type_j)
+    # Loop over J Items:
+    for(j in 1:length(item.type) ){
 
 
-  # M step:
-  vP <- param[[j]]
+      #E step:
+      item.type_j <- item.type[[j]]
+      categories.j_j <- categories.j[[j]]
 
-  suppressWarnings(
-
-    out <- optim(par = vP, fn = objective_function, method = 'BFGS',
-                 item.type_j = item.type_j,
-                 eta = eta,
-                 j = j,
-                 ev = ev,
-                 categories.j = categories.j_j,
-                 support = dat[ , item.names])
-
-  )
-  # Update parameter estimates:
-  param[[j]] <- out$par
+      # Pass "post.names" and "item.names"
+      ev = pseudo_counts(post = dat[ , post.names], X = dat[ , item.names],
+                         j = j,  categories.j = categories.j_j,
+                         eta = eta, item.type_j = item.type_j)
 
 
-}# end loop over J items
+      # M step:
+      vP <- param[[j]]
 
 
-  # ########################
-  # UPDATE POSTERIOR DISTRIBUTION
-  post.full <- compute_post(X = dat[ , item.names],
-                               lprior = dat[ , lprior.names], # Need labels from lprior initialization
-                               item.type = item.type,
-                               param = param,
-                               eta= eta,
-                               categories.j = categories.j)
+      suppressWarnings(
 
-  dat[ , post.names] <- post.full
+        out <- optim(par = vP, fn = objective_function, method = 'BFGS',
+                     item.type_j = item.type_j,
+                     eta = eta,
+                     j = j,
+                     ev = ev,
+                     categories.j = categories.j_j,
+                     support = dat[ , item.names])
 
-  if(!is.null(post.true)){  dat[ , post.names] <- post.true  }
+      )
+      # Update parameter estimates:
+      param[[j]] <- out$par
 
 
-#############################################
-  # UPDATE PRIOR DISTRIBUTION
-for(tt in unique(dat$Time) ){ # loop over timepoints
+    }# end loop over J items
 
-  ii <- which(dat[ , 'Time'] == tt)
-  post.t <- dat[ ii , post.names ]
-  Z <- dat[ ii, ]
 
-  if(!is.null( lat.reg[[ tt ]] )){
+    # ########################
+    # UPDATE POSTERIOR DISTRIBUTION
+    post.full <- compute_post(X = dat[ , item.names],
+                              lprior = dat[ , lprior.names], # Need labels from lprior initialization
+                              item.type = item.type,
+                              param = param,
+                              eta= eta,
+                              categories.j = categories.j)
+
+    dat[ , post.names] <- post.full
+
+    if(!is.null(post.true)){  dat[ , post.names] <- post.true  }
+
+
+    #############################################
+    # UPDATE PRIOR DISTRIBUTION
+    for(tt in unique(dat$Time) ){ # loop over timepoints
+
+      ii <- which(dat[ , 'Time'] == tt)
+      post.t <- dat[ ii , post.names ]
+      Z <- dat[ ii, ]
+
+      if(!is.null( lat.reg[[ tt ]] )){
 
         lprior.t <- compute_lprior(post = post.t, K = K,  Z = Z, type = 'latent_regression', reg.formula = lat.reg[[ tt]] )
-          lat.reg.param <- lprior.t$vP
-          lprior.t <- lprior.t$lprior # outputs both the prior and the latent regression parameter estimates
+        lat.reg.param <- lprior.t$vP
+        lprior.t <- lprior.t$lprior # outputs both the prior and the latent regression parameter estimates
 
-     } else {
+      } else {
 
         lprior.t <- compute_lprior(post = post.t, K = K, type = 'standard_EB')
 
-  }# end else statement
+      }# end else statement
 
-  dat[ ii , lprior.names ] <- lprior.t
+      dat[ ii , lprior.names ] <- lprior.t
 
-}# end loop over timepoints
-
-
+    }# end loop over timepoints
 
 
-  # Convergence: item parameter estimates - note, can track the convergence history
-  diff <- max(abs(unlist(est0) - unlist(param)))
-  it = it + 1
-  if(verbose == T){  cat('iteration: ', it, '  max diff in item parameter estimates: ', round(diff, 6), '\n') }
 
-} # End Estimation "while" loop
+
+    # Convergence: item parameter estimates - note, can track the convergence history
+    diff <- max(abs(unlist(est0) - unlist(param)))
+    it = it + 1
+    if(verbose == T){  cat('iteration: ', it, '  max diff in item parameter estimates: ', round(diff, 6), '\n') }
+
+  } # End Estimation "while" loop
 
 
   # Post Processing:

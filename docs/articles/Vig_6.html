@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CLCM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
 
       
 
-      </header><script src="Vig_6_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="Vig_6_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Vignette_6</h1>
@@ -191,11 +191,11 @@
             Q <span class="op">=</span> <span class="va">Q</span>, max.diff <span class="op">=</span> <span class="fl">0.001</span>, 
             lat.reg <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">'Time_1'</span> <span class="op">=</span> <span class="cn">NULL</span>, 
                             <span class="st">'Time_2'</span> <span class="op">=</span> <span class="st">'Group'</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; iteration:  1   max diff in item parameter estimates:  7.166888 </span>
-<span class="co">#&gt; iteration:  2   max diff in item parameter estimates:  6.079602 </span>
-<span class="co">#&gt; iteration:  3   max diff in item parameter estimates:  0.114464 </span>
-<span class="co">#&gt; iteration:  4   max diff in item parameter estimates:  0.002342 </span>
-<span class="co">#&gt; iteration:  5   max diff in item parameter estimates:  0.00074</span></code></pre></div>
+<span class="co">#&gt; iteration:  1   max diff in item parameter estimates:  7.216038 </span>
+<span class="co">#&gt; iteration:  2   max diff in item parameter estimates:  6.088791 </span>
+<span class="co">#&gt; iteration:  3   max diff in item parameter estimates:  0.079498 </span>
+<span class="co">#&gt; iteration:  4   max diff in item parameter estimates:  0.001061 </span>
+<span class="co">#&gt; iteration:  5   max diff in item parameter estimates:  0.000252</span></code></pre></div>
 </div>
 <div id="transition-matrix" class="section level2">
 <h2 class="hasAnchor">
@@ -210,19 +210,19 @@
 <span class="co">#&gt; TimeTime_2                  0</span>
 <span class="co">#&gt; GroupGroup_2:TimeTime_2     1</span>
 <span class="va">mod</span><span class="op">$</span><span class="va">lat.reg.param</span>  <span class="co"># estimate</span>
-<span class="co">#&gt;                     [,1]</span>
-<span class="co">#&gt; (Intercept)  -0.01113621</span>
-<span class="co">#&gt; GroupGroup_2  0.91986766</span>
+<span class="co">#&gt;                    [,1]</span>
+<span class="co">#&gt; (Intercept)  0.09622115</span>
+<span class="co">#&gt; GroupGroup_2 0.82629326</span>
 <span class="fu"><a href="../reference/transition_matrix_clcm.html">transition_matrix_clcm</a></span><span class="op">(</span>mod <span class="op">=</span> <span class="va">mod</span>, stratification <span class="op">=</span> <span class="cn">T</span>, covariate <span class="op">=</span> <span class="st">'Group'</span><span class="op">)</span>
 <span class="co">#&gt; $Group_1</span>
 <span class="co">#&gt;           post_LC_0 post_LC_1</span>
-<span class="co">#&gt; post_LC_0 0.5127149 0.4872851</span>
-<span class="co">#&gt; post_LC_1 0.4941222 0.5058778</span>
+<span class="co">#&gt; post_LC_0 0.4776086 0.5223914</span>
+<span class="co">#&gt; post_LC_1 0.4743698 0.5256302</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $Group_2</span>
 <span class="co">#&gt;           post_LC_0 post_LC_1</span>
-<span class="co">#&gt; post_LC_0 0.3052772 0.6947228</span>
-<span class="co">#&gt; post_LC_1 0.2700892 0.7299108</span></code></pre></div>
+<span class="co">#&gt; post_LC_0 0.2976411 0.7023589</span>
+<span class="co">#&gt; post_LC_1 0.2716665 0.7283335</span></code></pre></div>
 </div>
 <div id="classification-accuracy" class="section level2">
 <h2 class="hasAnchor">

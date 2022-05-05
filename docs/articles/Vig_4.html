@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CLCM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
 
       
 
-      </header><script src="Vig_4_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="Vig_4_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Vignette_4</h1>
@@ -164,29 +164,29 @@
 <span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">lca</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; lca</span>
 <span class="co">#&gt;     1     2     3     4 </span>
-<span class="co">#&gt; 0.244 0.312 0.278 0.166</span>
+<span class="co">#&gt; 0.229 0.294 0.319 0.158</span>
 <span class="co"># Check LCA across observed Groups:</span>
 <span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/xtabs.html">xtabs</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">lca</span> <span class="op">+</span> <span class="va">dat</span><span class="op">$</span><span class="va">Group</span><span class="op">)</span>, margin <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
 <span class="co">#&gt;    dat$Group</span>
 <span class="co">#&gt; lca   Group_1   Group_2</span>
-<span class="co">#&gt;   1 0.4016393 0.5983607</span>
-<span class="co">#&gt;   2 0.3076923 0.6923077</span>
-<span class="co">#&gt;   3 0.6366906 0.3633094</span>
-<span class="co">#&gt;   4 0.7771084 0.2228916</span></code></pre></div>
+<span class="co">#&gt;   1 0.3886463 0.6113537</span>
+<span class="co">#&gt;   2 0.3299320 0.6700680</span>
+<span class="co">#&gt;   3 0.5924765 0.4075235</span>
+<span class="co">#&gt;   4 0.7911392 0.2088608</span></code></pre></div>
 <p>Before we move on with the simulation, let’s just do a quick check on whether a simple multinomial logistic regression can recover this. Regress latent class assignment onto observed groups:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">nnet</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/nnet/man/multinom.html">multinom</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">lca</span><span class="op">)</span> <span class="op">~</span> <span class="va">dat</span><span class="op">$</span><span class="va">Group</span><span class="op">)</span>
 <span class="co">#&gt; # weights:  12 (6 variable)</span>
 <span class="co">#&gt; initial  value 1386.294361 </span>
-<span class="co">#&gt; iter  10 value 1295.613928</span>
-<span class="co">#&gt; final  value 1295.611719 </span>
+<span class="co">#&gt; iter  10 value 1296.530287</span>
+<span class="co">#&gt; final  value 1296.357792 </span>
 <span class="co">#&gt; converged</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span>
 <span class="co">#&gt;   (Intercept) dat$GroupGroup_2</span>
-<span class="co">#&gt; 2 -0.02061629        0.4122873</span>
-<span class="co">#&gt; 3  0.59118246       -0.9596703</span>
-<span class="co">#&gt; 4  0.27484554       -1.6475373</span>
+<span class="co">#&gt; 2  0.08606666        0.2554966</span>
+<span class="co">#&gt; 3  0.75310447       -0.8272089</span>
+<span class="co">#&gt; 4  0.33967811       -1.7848130</span>
 <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">Beta</span><span class="op">)</span>
 <span class="co">#&gt;    (Intercept) GroupGroup_2</span>
 <span class="co">#&gt; LC         0.2          0.2</span>
@@ -225,11 +225,10 @@
             item.names <span class="op">=</span> <span class="va">item.names</span>, 
             Q <span class="op">=</span> <span class="va">Q</span>, max.diff <span class="op">=</span> <span class="fl">0.001</span>, 
             lat.reg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">'Time_1'</span> <span class="op">=</span> <span class="st">'Group'</span><span class="op">)</span> <span class="op">)</span>    
-<span class="co">#&gt; iteration:  1   max diff in item parameter estimates:  8.886423 </span>
-<span class="co">#&gt; iteration:  2   max diff in item parameter estimates:  5.397401 </span>
-<span class="co">#&gt; iteration:  3   max diff in item parameter estimates:  7.353429 </span>
-<span class="co">#&gt; iteration:  4   max diff in item parameter estimates:  0.005107 </span>
-<span class="co">#&gt; iteration:  5   max diff in item parameter estimates:  0.000183</span></code></pre></div>
+<span class="co">#&gt; iteration:  1   max diff in item parameter estimates:  12.14041 </span>
+<span class="co">#&gt; iteration:  2   max diff in item parameter estimates:  0.617925 </span>
+<span class="co">#&gt; iteration:  3   max diff in item parameter estimates:  0.025807 </span>
+<span class="co">#&gt; iteration:  4   max diff in item parameter estimates:  0.000499</span></code></pre></div>
 </div>
 <div id="results" class="section level2">
 <h2 class="hasAnchor">
@@ -242,9 +241,9 @@
 <span class="co">#&gt; (Intercept)  0.2  0.8  0.4</span>
 <span class="co">#&gt; GroupGroup_2 0.2 -1.0 -1.6</span>
 <span class="va">mod</span><span class="op">$</span><span class="va">lat.reg.param</span>  <span class="co"># estimate</span>
-<span class="co">#&gt;                     [,1]       [,2]       [,3]</span>
-<span class="co">#&gt; (Intercept)  -0.01880987  0.5943333  0.2761615</span>
-<span class="co">#&gt; GroupGroup_2  0.40350389 -0.9794904 -1.6557006</span></code></pre></div>
+<span class="co">#&gt;                    [,1]       [,2]       [,3]</span>
+<span class="co">#&gt; (Intercept)  0.08936416  0.7571617  0.3427597</span>
+<span class="co">#&gt; GroupGroup_2 0.25225375 -0.8307632 -1.7893588</span></code></pre></div>
 <p>Next, compare true classification (latent class assignment, lca) with estimates:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lca.hat</span> <span class="op">&lt;-</span> <span class="va">mod</span><span class="op">$</span><span class="va">dat</span><span class="op">$</span><span class="va">lca</span> 
@@ -252,18 +251,18 @@
 <span class="fu"><a href="https://rdrr.io/r/stats/xtabs.html">xtabs</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">lca.hat</span> <span class="op">+</span> <span class="va">lca.true</span><span class="op">)</span>
 <span class="co">#&gt;        lca.true</span>
 <span class="co">#&gt; lca.hat   1   2   3   4</span>
-<span class="co">#&gt;       1 244   0   1   0</span>
-<span class="co">#&gt;       2   0 312   0   0</span>
-<span class="co">#&gt;       3   0   0 277   0</span>
-<span class="co">#&gt;       4   0   0   0 166</span>
+<span class="co">#&gt;       1 229   0   0   0</span>
+<span class="co">#&gt;       2   0 294   0   0</span>
+<span class="co">#&gt;       3   0   0 319   0</span>
+<span class="co">#&gt;       4   0   0   0 158</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">lca.true</span> <span class="op">==</span> <span class="va">lca.hat</span><span class="op">)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; FALSE  TRUE </span>
-<span class="co">#&gt;     1   999</span>
+<span class="co">#&gt; TRUE </span>
+<span class="co">#&gt; 1000</span>
 <span class="fu"><a href="https://rdrr.io/r/base/proportions.html">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">lca.true</span> <span class="op">==</span> <span class="va">lca.hat</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; FALSE  TRUE </span>
-<span class="co">#&gt; 0.001 0.999</span></code></pre></div>
+<span class="co">#&gt; TRUE </span>
+<span class="co">#&gt;    1</span></code></pre></div>
 <p>Pretty, preeettty, preeeeeetttttyyy good.</p>
 </div>
   </div>

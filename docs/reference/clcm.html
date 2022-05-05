@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CLCM</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -151,6 +151,7 @@
   lat.reg <span class='op'>=</span> <span class='cn'>NULL</span>,
   sv <span class='op'>=</span> <span class='cn'>NULL</span>,
   post.true <span class='op'>=</span> <span class='cn'>NULL</span>,
+  initial.lprior <span class='op'>=</span> <span class='cn'>NULL</span>,
   initial.post <span class='op'>=</span> <span class='cn'>NULL</span>,
   max.diff <span class='op'>=</span> <span class='fl'>1e-04</span>,
   max.it <span class='op'>=</span> <span class='fl'>1000</span>,
@@ -241,6 +242,11 @@ variable <code>Time</code>.</p></td>
     <tr>
       <th>sv</th>
       <td><p>optional list of the starting values for item parameter estimation</p></td>
+    </tr>
+    <tr>
+      <th>initial.lprior</th>
+      <td><p>optional matrix of the initial log-prior distribution. This
+is important for the 2-stage estimation routine.</p></td>
     </tr>
     <tr>
       <th>initial.post</th>

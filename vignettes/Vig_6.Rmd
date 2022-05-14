@@ -1,8 +1,8 @@
 ---
-title: "Vignette_6"
+title: "Longitudinal CLCM with Latent Regression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_6}
+  %\VignetteIndexEntry{Longitudinal CLCM with Latent Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,8 +13,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-## Longitudinal CLCM with Latent Regression (2 latent classes)
 
 
 This extends our data generation to incorporate two new aspects:

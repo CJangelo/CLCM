@@ -1,8 +1,8 @@
 ---
-title: "Vignette_2"
+title: "C2 Fit Statistics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_2}
+  %\VignetteIndexEntry{C2 Fit Statistics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,6 +15,10 @@ knitr::opts_chunk$set(
 ```
 
 ## Vignette 2: C2 Fit Statistic
+
+The C2 fit statistic is the latest approach to evaluating absolute model fit 
+with latent variable models. See extensive literature on this (TO DO). 
+
 
 1. Generate ordinal data
 2. Compute C2 statistic

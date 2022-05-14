@@ -1,8 +1,8 @@
 ---
-title: "Vignette_4"
+title: "Multinomial Latent Regression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_4}
+  %\VignetteIndexEntry{Multinomial Latent Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Vignette 4: Multinomial Latent Regression (4 latent classes)
 
 1. Timepoints: T=1
 2. Latent Classes: K=2, 2^K = 4 latent classes

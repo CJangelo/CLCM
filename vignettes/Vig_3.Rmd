@@ -1,8 +1,8 @@
 ---
-title: "Vignette_3"
+title: "CLCM with Greater than 2 Latent Classes"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_3}
+  %\VignetteIndexEntry{CLCM with Greater than 2 Latent Classes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 ```
 
 
-## Vignette 3: CLCM with More Than 2 Latent Classes 
 
 1. Data generation with K=2 factors/atttributes, 2^K = 4 latent classes
 2. Describe K, alpha, Q-matrix, eta

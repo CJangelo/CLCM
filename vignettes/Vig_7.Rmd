@@ -1,8 +1,8 @@
 ---
-title: "Vignette_7"
+title: "Longitudinal CLCM with Multinomial Latent Regression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette_7}
+  %\VignetteIndexEntry{Longitudinal CLCM with Multinomial Latent Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignette 7: Longitudinal Data with Multinomial Latent Regression 
 
 1. Timepoints: 2
 2. Latent Classes: K=2, 2^K = 4 latent classes

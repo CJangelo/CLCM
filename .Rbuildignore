@@ -7,3 +7,4 @@
 ^\.Rproj\.user$
 ^README\.md$
 ^cran-comments\.md$
+^\.gitignore$

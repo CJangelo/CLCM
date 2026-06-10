@@ -1,0 +1,9 @@
+^docs$
+^sandbox$
+^misc$
+^\.git$
+^\.github$
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.md$
+^cran-comments\.md$

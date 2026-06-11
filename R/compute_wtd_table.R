@@ -1,7 +1,7 @@
 
 # Local copy of Hmisc::all.is.numeric (https://github.com/harrelfe/Hmisc),
 # needed by wtd.table() below; avoids importing all of Hmisc.
-all.is.numeric <- function(x, what = c('test', 'vector'), extras = c('.', 'NA')) {
+all_is_numeric <- function(x, what = c('test', 'vector'), extras = c('.', 'NA')) {
   what <- match.arg(what)
   x <- sub('[[:space:]]+$', '', x)
   x <- sub('^[[:space:]]+', '', x)
@@ -66,7 +66,7 @@ wtd.table <- function(x, weights=NULL, type=c('list','table'),
     if(type=='table')
       return(weights)
 
-    x <- all.is.numeric(names(weights), 'vector')
+    x <- all_is_numeric(names(weights), 'vector')
     if(isdate)
       attributes(x) <- c(attributes(x),ax)
 

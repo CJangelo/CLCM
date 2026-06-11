@@ -45,23 +45,20 @@ Compute Transition Matrix, stratified on categorical variable
 Key to evaluating group differences
 }
 \examples{
-\dontrun{
-
 set.seed(3112021)
-sim.dat <- simulate_clcm(N=200,
-                          number.timepoints = 2,
-                          item.type = rep('Ordinal', 5),
-                          categories.j = rep(4, 5),
-                          lc.prop = list('Time_1' = c(0.5, 0.5), 'Time_2' = c(0.5, 0.5)) )
+sim.dat <- simulate_clcm(N = 200,
+                         number.timepoints = 2,
+                         item.type = rep('Ordinal', 5),
+                         categories.j = rep(4, 5),
+                         lc.prop = list('Time_1' = c(0.5, 0.5),
+                                        'Time_2' = c(0.5, 0.5)) )
 
 mod <- clcm(dat = sim.dat$dat,
-          item.type = sim.dat$item.type,
-           item.names = sim.dat$item.names,
-           Q = sim.dat$Q)
-
+            item.type = sim.dat$item.type,
+            item.names = sim.dat$item.names,
+            Q = sim.dat$Q,
+            verbose = FALSE)
 
 tau.hat <- transition_matrix_clcm(mod)
-
-
-}
+tau.hat
 }

@@ -9,6 +9,9 @@ compute_lprior(post, K, Z = NULL, type = NULL, reg.formula = NULL)
 \arguments{
 \item{post}{posterior distribution}
 
+\item{K}{integer, the number of attributes (factors); the model has 2^K
+latent classes}
+
 \item{Z}{data frame or matrix containing covariates}
 
 \item{type}{the type of prior distribution - this is selected automatically in the clcm() function
@@ -21,4 +24,24 @@ matrix of N by 2^K
 }
 \description{
 Compute the log of the prior distribution for use in the EM algorithm
+}
+\examples{
+\donttest{
+set.seed(3112021)
+sim.dat <- simulate_clcm(N = 200,
+                         number.timepoints = 1,
+                         item.type = rep('Ordinal', 5),
+                         categories.j = rep(4, 5),
+                         lc.prop = list('Time_1' = c(0.5, 0.5)) )
+mod <- clcm(dat = sim.dat$dat,
+            item.type = sim.dat$item.type,
+            item.names = sim.dat$item.names,
+            Q = sim.dat$Q,
+            verbose = FALSE)
+lprior <- compute_lprior(post = mod$dat[, mod$post.names],
+                         type = 'standard_EB',
+                         K = mod$K)
+head(exp(lprior))
+}
+
 }

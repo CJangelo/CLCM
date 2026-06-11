@@ -13,11 +13,45 @@ model to.}
 \item{clcm.mod}{a CLCM model that you already fit (Stage 1). This will
 have the item parameter estimates, item names, item type, and Q-matrix.}
 
-\item{lprior}{this is the log-prior for timepoint 2. N by L matrix.}
+\item{lprior.t1}{the log-prior used to initialize the first timepoint in
+\code{dat}; an N by L matrix, where L is the number of latent classes. Use
+\code{compute_lprior()} on the Stage 1 posteriors to obtain this.}
+}
+\value{
+Returns a dataframe containing the item responses in \code{dat}
+together with the posterior probabilities of latent class membership
+computed at each timepoint under the fixed Stage 1 item parameters.
 }
 \description{
 Treat item parameters as fixed to fit a longitudinal CLCM. The model
 can have any number of timepoints. The only limitation is the estimation
 of the posteriors - item parameters are fixed.
-The CLCM R package requires that count items start at 0
+The CLCM R package requires that count items start at 0.
+}
+\examples{
+\donttest{
+set.seed(3112021)
+sim.dat <- simulate_clcm(N = 200,
+                         number.timepoints = 2,
+                         item.type = rep('Ordinal', 5),
+                         categories.j = rep(4, 5),
+                         lc.prop = list('Time_1' = c(0.5, 0.5),
+                                        'Time_2' = c(0.5, 0.5)) )
+
+# Stage 1: fit the model to the first timepoint only
+dat.t1 <- sim.dat$dat[sim.dat$dat$Time == 'Time_1', ]
+mod1 <- clcm(dat = dat.t1,
+             item.type = sim.dat$item.type,
+             item.names = sim.dat$item.names,
+             Q = sim.dat$Q,
+             verbose = FALSE)
+
+# Stage 2: fixed item parameters, estimate posteriors at timepoint 2
+lprior1 <- compute_lprior(post = mod1$dat[, mod1$post.names],
+                          type = 'standard_EB',
+                          K = mod1$K)
+dat.t2 <- sim.dat$dat[sim.dat$dat$Time == 'Time_2', ]
+post2 <- clcm_2stage(dat = dat.t2, clcm.mod = mod1, lprior.t1 = lprior1)
+head(post2)
+}
 }

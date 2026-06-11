@@ -12,6 +12,16 @@ start_with_zero(dat, items)
 \item{items}{vector of item names. These should be the count items that need
 to start at zero in order for \code{clcm} function to estimate the model.}
 }
+\value{
+Returns the dataframe \code{dat} with the columns named in \code{items}
+shifted so that the minimum observed value of each is 0.
+}
 \description{
-The CLCM R package requires that count items start at 0
+The CLCM R package requires that count items start at 0. This helper
+shifts each specified item so that its minimum observed value is 0.
+}
+\examples{
+dat <- data.frame(Item_1 = c(3, 5, 4, 7),
+                  Item_2 = c(10, 12, 11, 15))
+start_with_zero(dat, items = c('Item_1', 'Item_2'))
 }

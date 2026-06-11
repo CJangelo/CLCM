@@ -10,38 +10,35 @@ aic_bic_clcm(mod)
 \item{mod}{object from the \code{clcm()} function}
 }
 \value{
-Returns the -2LL, AIC, and BIC of the confirmatory latent class model.
+Returns the -2LL, AIC, and BIC of the confirmatory latent class model. Allows you to compare relative model fit.
 }
 \description{
 Compute AIC, BIC, and 2LL of the CLCM model
 }
 \examples{
-\dontrun{
 set.seed(3112021)
-sim.dat <- simulate_clcm(N=1000,
+# Simulate 5 Ordinal items
+sim.dat <- simulate_clcm(N = 200,
                          number.timepoints = 1,
                          item.type = rep('Ordinal', 5),
                          categories.j = rep(4, 5),
                          lc.prop = list('Time_1' = c(0.5, 0.5)) )
 
-
+# Fit a model with 5 nominal items to the data
 mod1 <- clcm(dat = sim.dat$dat,
             item.type = rep('Nominal', 5),
             item.names = sim.dat$item.names,
-            Q = sim.dat$Q)
+            Q = sim.dat$Q,
+            verbose = FALSE)
 
-
+# Fit a second model with 5 ordinal items to the data             
 mod2 <- clcm(dat = sim.dat$dat,
-           item.type = rep('Ordinal', 5),
-           item.names = sim.dat$item.names,
-           Q = sim.dat$Q)
+            item.type = rep('Ordinal', 5),
+            item.names = sim.dat$item.names,
+            Q = sim.dat$Q,
+            verbose = FALSE)       
 
-
-mod.fit1 <- aic_bic_clcm(mod1)
-mod.fit2 <- aic_bic_clcm(mod2)
-
-
-unlist(mod.fit1)
-unlist(mod.fit2)
-}
+# Compare the two model fits:
+unlist(aic_bic_clcm(mod1))
+unlist(aic_bic_clcm(mod2))
 }

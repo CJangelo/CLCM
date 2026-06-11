@@ -17,7 +17,7 @@ clcm(
   initial.post = NULL,
   max.diff = 1e-04,
   max.it = 1000,
-  verbose = T
+  verbose = TRUE
 )
 }
 \arguments{
@@ -95,6 +95,10 @@ variable \code{Time}.}
 
 \item{sv}{optional list of the starting values for item parameter estimation}
 
+\item{post.true}{optional matrix of the true posterior distributions, as
+produced by \code{simulate_clcm()}; used to evaluate parameter recovery in
+simulation studies}
+
 \item{initial.lprior}{optional matrix of the initial log-prior distribution. This
 is important for the 2-stage estimation routine.}
 
@@ -114,18 +118,16 @@ Returns the estimated confirmatory latent class model
 Estimate confirmatory latent class model
 }
 \examples{
-\dontrun{
 set.seed(3112021)
-sim.dat <- simulate_clcm(N=200,
-                          number.timepoints = 1,
-                          item.type = rep('Ordinal', 5),
-                          categories.j = rep(4, 5),
-                          lc.prop = list('Time_1' = c(0.5, 0.5)) )
+sim.dat <- simulate_clcm(N = 200,
+                         number.timepoints = 1,
+                         item.type = rep('Ordinal', 5),
+                         categories.j = rep(4, 5),
+                         lc.prop = list('Time_1' = c(0.5, 0.5)) )
 
 mod <- clcm(dat = sim.dat$dat,
             item.type = sim.dat$item.type,
             item.names = sim.dat$item.names,
-            Q = sim.dat$Q)
-
- }
+            Q = sim.dat$Q,
+            verbose = FALSE)
 }

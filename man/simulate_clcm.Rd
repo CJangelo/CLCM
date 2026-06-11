@@ -101,12 +101,11 @@ Returns simulated item responses and posterior distributions.
 Simulate data for the CLCM
 }
 \examples{
-\dontrun{
 set.seed(3112021)
-simulate_clcm(N=50, number.timepoints = 1,
+sim.dat <- simulate_clcm(N = 50, number.timepoints = 1,
                item.type = rep('Ordinal', 5),
                categories.j = rep(4, 5),
                lc.prop = list('Time_1' = c(0.5, 0.5)) )
-}
+str(sim.dat$dat)
 
 }

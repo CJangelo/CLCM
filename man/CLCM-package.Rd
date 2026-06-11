@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Charlie Iaconangelo \email{charles.iaconangelo@gmail.com}
 
+Authors:
+\itemize{
+  \item Charlie Iaconangelo \email{charles.iaconangelo@gmail.com}
+}
+
 }
 \keyword{internal}

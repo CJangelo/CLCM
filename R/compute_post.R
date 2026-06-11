@@ -8,7 +8,8 @@
 #' @param eta matrix operationalizing the condensation rules
 #' @param categories.j numeric vector of number of categories per item
 #' @return matrix of N by 2^K
-#' @export
+#' @keywords internal
+#' @noRd
 #'
 
 compute_post <- function(X, item.type, param, lprior, eta, categories.j){

@@ -9,7 +9,7 @@
 #' The latter two can be used to assess the fit visually.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' set.seed(3112021)
 #' sim.dat <- simulate_clcm(N=200,
 #'                           number.timepoints = 1,
@@ -22,12 +22,12 @@
 #'             item.names = sim.dat$item.names,
 #'             Q = sim.dat$Q)
 #'
-#' mod.fit <- C2_clcm(mod)
+#' mod.fit <- C2_clcm(mod)  # takes roughly 10 seconds
 #'
 #'  }
 
 
-C2_clcm <- function(mod, verbose = T){
+C2_clcm <- function(mod, verbose = TRUE){
 
 
   # Pull the following from the mod passed:
@@ -110,7 +110,7 @@ C2_clcm <- function(mod, verbose = T){
   rmsea <- sqrt(Fhat/df)
 
   print.out <- c(C2, pval, rmsea)
-  if(verbose == T){  cat(paste0(c('C2 = ','  P-Value = ', '  RMSEA = '),  sprintf("%0.3f", print.out) ), '\n')  }
+  if(isTRUE(verbose)){  message(paste(paste0(c('C2 = ','  P-Value = ', '  RMSEA = '),  sprintf("%0.3f", print.out) ), collapse = ''))  }
 
   out <- list('C2' = C2,
               'pval' = pval,

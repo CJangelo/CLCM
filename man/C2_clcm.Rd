@@ -4,7 +4,7 @@
 \alias{C2_clcm}
 \title{C2 Fit Statistic}
 \usage{
-C2_clcm(mod, verbose = T)
+C2_clcm(mod, verbose = TRUE)
 }
 \arguments{
 \item{mod}{estimated model object from \code{clcm()} function}
@@ -21,7 +21,7 @@ The latter two can be used to assess the fit visually.
 Compute C2 Test Statistic for the CLCM
 }
 \examples{
-\dontrun{
+\donttest{
 set.seed(3112021)
 sim.dat <- simulate_clcm(N=200,
                           number.timepoints = 1,
@@ -34,7 +34,7 @@ mod <- clcm(dat = sim.dat$dat,
             item.names = sim.dat$item.names,
             Q = sim.dat$Q)
 
-mod.fit <- C2_clcm(mod)
+mod.fit <- C2_clcm(mod)  # takes roughly 10 seconds
 
  }
 }

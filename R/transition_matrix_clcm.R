@@ -28,25 +28,22 @@
 #' then returns a list of 2^K by 2^K numeric matrices.
 #' @export
 #' @examples
-#' \dontrun{
-#'
 #' set.seed(3112021)
-#' sim.dat <- simulate_clcm(N=200,
-#'                           number.timepoints = 2,
-#'                           item.type = rep('Ordinal', 5),
-#'                           categories.j = rep(4, 5),
-#'                           lc.prop = list('Time_1' = c(0.5, 0.5), 'Time_2' = c(0.5, 0.5)) )
+#' sim.dat <- simulate_clcm(N = 200,
+#'                          number.timepoints = 2,
+#'                          item.type = rep('Ordinal', 5),
+#'                          categories.j = rep(4, 5),
+#'                          lc.prop = list('Time_1' = c(0.5, 0.5),
+#'                                         'Time_2' = c(0.5, 0.5)) )
 #'
 #' mod <- clcm(dat = sim.dat$dat,
-#'           item.type = sim.dat$item.type,
-#'            item.names = sim.dat$item.names,
-#'            Q = sim.dat$Q)
-#'
+#'             item.type = sim.dat$item.type,
+#'             item.names = sim.dat$item.names,
+#'             Q = sim.dat$Q,
+#'             verbose = FALSE)
 #'
 #' tau.hat <- transition_matrix_clcm(mod)
-#'
-#'
-#' }
+#' tau.hat
 transition_matrix_clcm <- function(mod,
                                        eap.classification = F,
                                        threshold = NULL,
@@ -63,6 +60,7 @@ transition_matrix_clcm <- function(mod,
   #  stop('If you want to use EAP classification, pass a threshold to use as a cut-off') }
 
 
+  post1 <- post2 <- Z1 <- Z2 <- NULL
   dat <- mod$dat
   alpha <- mod$alpha
   post.names <- mod$post.names
@@ -81,7 +79,7 @@ transition_matrix_clcm <- function(mod,
 
       ii <- which(dat[ , 'Time'] == tt)
       map <- matrix(0, nrow = length(ii), ncol = 2^K)
-      map[cbind(1:N, apply(dat[ ii , post.names ], 1, which.max))] <- 1 # TODO: check the which.max tie breaker
+      map[cbind(seq_along(ii), apply(dat[ ii , post.names ], 1, which.max))] <- 1 # TODO: check the which.max tie breaker
       assign(x = paste0('post', tp), value = map)
       assign(x = paste0('Z', tp), value = dat[ ii, covariate, drop = F])
       tp <- tp + 1
@@ -99,7 +97,7 @@ transition_matrix_clcm <- function(mod,
           ii <- which(dat[ , 'Time'] == tt)
           eap <- matrix(0, nrow = length(ii), ncol = 2^K)
           post.ii <- as.matrix(dat[ ii , post.names ])
-          eap[cbind(1:N,  1 + (post.ii %*% alpha > threshold))]  <- 1 # EAP - customize threshold
+          eap[cbind(seq_along(ii),  1 + (post.ii %*% alpha > threshold))]  <- 1 # EAP - customize threshold
           assign(x = paste0('post', tp), value = eap)
           assign(x = paste0('Z', tp), value = dat[ ii, covariate, drop = F])
           tp <- tp + 1

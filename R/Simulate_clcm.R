@@ -79,13 +79,12 @@
 #' @return Returns simulated item responses and posterior distributions.
 #' @export
 #' @examples
-#' \dontrun{
 #' set.seed(3112021)
-#' simulate_clcm(N=50, number.timepoints = 1,
+#' sim.dat <- simulate_clcm(N = 50, number.timepoints = 1,
 #'                item.type = rep('Ordinal', 5),
 #'                categories.j = rep(4, 5),
 #'                lc.prop = list('Time_1' = c(0.5, 0.5)) )
-#' }
+#' str(sim.dat$dat)
 #'
 
 simulate_clcm <- function(N,
@@ -104,7 +103,7 @@ simulate_clcm <- function(N,
     if(is.null(categories.j)){ stop('Specify the number of categories per item - see documentation for details') }
     if( is.null(lc.prop) & is.null(post) ){ stop('Pass latent class structure - see documentation for details') }
     if( !is.null(lc.prop) & !is.null(post) ){ stop('Pass **either** latent class proportions or matrices')}
-    if(is.null(Q)){  print('No Q-matrix passed to estimation function; default is two latent classes');
+    if(is.null(Q)){  message('No Q-matrix passed to simulation function; default is two latent classes');
                       Q <- matrix(1, nrow = length(item.type), ncol = 1, dimnames = list(paste0('Item_', 1:length(item.type)), NULL))
                       }
 
@@ -228,7 +227,7 @@ if(!is.null(post)){
               # Second time point:
               tt <- sort(unique(dat$Time))[2]
               ii <- which(dat[ , 'Time'] == tt)
-              post.2 <- post.1 %*% tau
+              post.2 <- post.1 %*% transition.matrix
               # Posterior Distributions all sum to 1?
                 if(!all(apply(post.2, 1, sum) == 1)){ stop("Posterior distributions don't sum to 1; check latent class proportions and transition matrix") }
               p2 <- t(apply(post.2, 1, cumsum))

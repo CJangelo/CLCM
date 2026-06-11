@@ -75,6 +75,9 @@
 #' the discrete timepoints. Note that the `dat` dataframe passed must contain the
 #' variable `Time`.
 #'
+#' @param post.true optional matrix of the true posterior distributions, as
+#' produced by `simulate_clcm()`; used to evaluate parameter recovery in
+#' simulation studies
 #' @param sv optional list of the starting values for item parameter estimation
 #' @param initial.lprior optional matrix of the initial log-prior distribution. This
 #' is important for the 2-stage estimation routine.
@@ -86,20 +89,18 @@
 #' @return Returns the estimated confirmatory latent class model
 #' @export
 #' @examples
-#' \dontrun{
 #' set.seed(3112021)
-#' sim.dat <- simulate_clcm(N=200,
-#'                           number.timepoints = 1,
-#'                           item.type = rep('Ordinal', 5),
-#'                           categories.j = rep(4, 5),
-#'                           lc.prop = list('Time_1' = c(0.5, 0.5)) )
+#' sim.dat <- simulate_clcm(N = 200,
+#'                          number.timepoints = 1,
+#'                          item.type = rep('Ordinal', 5),
+#'                          categories.j = rep(4, 5),
+#'                          lc.prop = list('Time_1' = c(0.5, 0.5)) )
 #'
 #' mod <- clcm(dat = sim.dat$dat,
 #'             item.type = sim.dat$item.type,
 #'             item.names = sim.dat$item.names,
-#'             Q = sim.dat$Q)
-#'
-#'  }
+#'             Q = sim.dat$Q,
+#'             verbose = FALSE)
 
 
 clcm <- function(dat,
@@ -114,17 +115,17 @@ clcm <- function(dat,
                  initial.post = NULL,
                  max.diff = 1e-4,
                  max.it = 1e3,
-                 verbose =T ){
+                 verbose = TRUE ){
 
 
   # Check Data - Throw Errors, set defaults
   if(!is.data.frame(dat)){ stop('Pass a dataframe containing item responses')}
   if(is.null(item.type)){ stop('Must specify item type; pass character vector')}
   if(is.null(item.names)){ stop('Must specify item names; pass character vector')}
-  if(is.null(dat$Time)){ print('No time variable - assuming a single timepoint');
+  if(is.null(dat$Time)){ message('No time variable - assuming a single timepoint');
     dat$Time <- 'Time_1' }
   if(length(unique(dat$Time)) > 2){ stop('Estimation function currently only supports up to 2 timepoints; please check your "Time" variable to confirm you only have two timepoints')}
-  if(is.null(Q)){  print('No Q-matrix passed to estimation function; default is two latent classes');
+  if(is.null(Q)){  message('No Q-matrix passed to estimation function; default is two latent classes');
     Q <- matrix(1, nrow = length(item.type), ncol = 1, dimnames = list(paste0('Item_', 1:length(item.type)), NULL))
   }
 
@@ -232,7 +233,7 @@ clcm <- function(dat,
 
       # Pass "post.names" and "item.names"
       ev = pseudo_counts(post = dat[ , post.names], X = dat[ , item.names],
-                         j = j,  categories.j = categories.j_j,
+                         j = j,  categories.j_j = categories.j_j,
                          eta = eta, item.type_j = item.type_j)
 
 
@@ -302,7 +303,7 @@ clcm <- function(dat,
     # Convergence: item parameter estimates - note, can track the convergence history
     diff <- max(abs(unlist(est0) - unlist(param)))
     it = it + 1
-    if(verbose == T){  cat('iteration: ', it, '  max diff in item parameter estimates: ', round(diff, 6), '\n') }
+    if(isTRUE(verbose)){  message('iteration: ', it, '  max diff in item parameter estimates: ', round(diff, 6)) }
 
   } # End Estimation "while" loop
 

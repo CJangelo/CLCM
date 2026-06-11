@@ -101,7 +101,7 @@ for(comb in 1:ncol(all.comb)){
 
 
   out <- lapply(out, function(x) matrix(x, nrow = 1))
-  R <- Matrix:::bdiag(out) # Create a block diagonal
+  R <- Matrix::bdiag(out) # Create a block diagonal
   L.star <- R %*% L2
   row.names(L.star) <- apply(combn(colnames(dat), 2), 2, function(x) paste0(x[1], '_', x[2]))
   M <- rbind(L1, L.star)

@@ -5,36 +5,20 @@
 #' @return Returns the -2LL, AIC, and BIC of the confirmatory latent class model.
 #' @export
 #' @examples
-#' \dontrun{
 #' set.seed(3112021)
-#' sim.dat <- simulate_clcm(N=1000,
+#' sim.dat <- simulate_clcm(N = 200,
 #'                          number.timepoints = 1,
 #'                          item.type = rep('Ordinal', 5),
 #'                          categories.j = rep(4, 5),
 #'                          lc.prop = list('Time_1' = c(0.5, 0.5)) )
 #'
-#'
-#' mod1 <- clcm(dat = sim.dat$dat,
-#'             item.type = rep('Nominal', 5),
+#' mod <- clcm(dat = sim.dat$dat,
+#'             item.type = sim.dat$item.type,
 #'             item.names = sim.dat$item.names,
-#'             Q = sim.dat$Q)
+#'             Q = sim.dat$Q,
+#'             verbose = FALSE)
 #'
-#'
-#'mod2 <- clcm(dat = sim.dat$dat,
-#'            item.type = rep('Ordinal', 5),
-#'            item.names = sim.dat$item.names,
-#'            Q = sim.dat$Q)
-#'
-#'
-#' mod.fit1 <- aic_bic_clcm(mod1)
-#' mod.fit2 <- aic_bic_clcm(mod2)
-#'
-#'
-#' unlist(mod.fit1)
-#' unlist(mod.fit2)
-#' }
-
-
+#' unlist(aic_bic_clcm(mod))
 
 
 

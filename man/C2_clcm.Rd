@@ -26,7 +26,7 @@ set.seed(3112021)
 sim.dat <- simulate_clcm(N=200,
                           number.timepoints = 1,
                           item.type = rep('Ordinal', 5),
-                          categories.j = rep(4, 5),
+                          categories.j = rep(2, 5),
                           lc.prop = list('Time_1' = c(0.5, 0.5)) )
 
 mod <- clcm(dat = sim.dat$dat,
@@ -34,7 +34,7 @@ mod <- clcm(dat = sim.dat$dat,
             item.names = sim.dat$item.names,
             Q = sim.dat$Q)
 
-mod.fit <- C2_clcm(mod)  # takes roughly 10 seconds
+mod.fit <- C2_clcm(mod)  
 
  }
 }
